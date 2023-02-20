@@ -18,6 +18,8 @@ const signup = async (req, res) => {
         user.username = username;
         user.setPassword(password);
 
+        await user.save();
+
         const token = jsonwebtoken.sign(
             { data: user.id },
             process.env.TOKEN_SECRET,
@@ -29,8 +31,39 @@ const signup = async (req, res) => {
             ...user._doc,
             id: user.id
         });
+    } catch {
+        responseHandler.error(res);
+    }
+};
 
-        await user.save();
+const signin = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        const user = userModel.findOne({ username }).select("username password salt id displayName");
+
+        if (!user) {
+            return responseHandler.badRequest(res, "Invalid credentials");
+        }
+
+        if (!user.validPassword(password)) {
+            return responseHandler.badRequest(res, "Invalid credentials");
+        }
+
+        const token = jsonwebtoken.sign(
+            { data: user.id },
+            process.env.TOKEN_SECRET,
+            { expiresIn: "24h" }
+        );
+
+        user.password = undefined;
+        user.salt = undefined;
+
+        responseHandler.created(res, {
+            token,
+            ...user._doc,
+            id: user.id
+        });
     } catch {
         responseHandler.error(res);
     }
