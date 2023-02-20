@@ -67,4 +67,28 @@ const signin = async (req, res) => {
     } catch {
         responseHandler.error(res);
     }
-}
+};
+
+const updatePassword = async (req, res) => {
+    try {
+        const { password, newPassword } = req.body;
+
+        const user = userModel.findById(req.user.id).select("password id salt");
+
+        if (!user) {
+            return responseHandler.unauthorize(res);
+        }
+
+        if (!user.validPassword(password)) {
+            return responseHandler.badRequest(res, "Invalid credentials");
+        }
+
+        user.setPassword(newPassword);
+
+        await user.save();
+
+        responseHandler.ok(res);
+    } catch {
+        responseHandler.error(res);
+    }
+};
