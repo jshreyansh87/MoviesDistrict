@@ -92,3 +92,24 @@ const updatePassword = async (req, res) => {
         responseHandler.error(res);
     }
 };
+
+const getInfo = async (req, res) => {
+    try {
+        const user = userModel.findById(req.user.id);
+
+        if (!user) {
+            return responseHandler.notfound(res);
+        }
+
+        responseHandler.ok(res, user);
+    } catch {
+        responseHandler.error(res);
+    }
+};
+
+export default {
+    signup,
+    signin,
+    updatePassword,
+    getInfo
+}
