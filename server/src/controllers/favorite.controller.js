@@ -9,7 +9,7 @@ const addFavorite = async (req, res) => {
         });
 
         if (isFavorite) {
-            responseHandler.ok(res, isFavorite);
+            return responseHandler.ok(res, isFavorite);
         }
 
         const favorite = new favoriteModel({
@@ -19,6 +19,26 @@ const addFavorite = async (req, res) => {
 
         await favorite.save();
         responseHandler.created(res, isFavorite);
+    } catch {
+        responseHandler.error(res);
+    }
+};
+
+const removeFavorite = async (req, res) => {
+    try {
+        const { favoriteId } = req.params;
+
+        const favorite = await favoriteModel.findOne({
+            user: req.user.id,
+            _id: favoriteId
+        });
+
+        if (!favorite) {
+            return responseHandler.notfound(res);
+        }
+
+        await favorite.remove();
+        responseHandler.ok(res);
     } catch {
         responseHandler.error(res);
     }
