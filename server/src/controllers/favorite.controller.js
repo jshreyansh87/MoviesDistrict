@@ -43,3 +43,19 @@ const removeFavorite = async (req, res) => {
         responseHandler.error(res);
     }
 };
+
+const getFavorite = async (req, res) => {
+    try {
+        const favorite = await favoriteModel.findOne({ user: req.user.id }).sort("-createdAt");
+
+        responseHandler.ok(res, favorite);
+    } catch {
+        responseHandler.error(res);
+    }
+};
+
+export default {
+    addFavorite,
+    removeFavorite,
+    getFavorite
+};
