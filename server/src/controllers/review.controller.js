@@ -22,3 +22,22 @@ const create = async (req, res) => {
         responseHandler.error(res);
     }
 };
+
+const remove = async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+
+        const review = await reviewModel.findOne({
+            _id: reviewId,
+            user: req.user.id
+        });
+
+        if (!review) {
+            return responseHandler.notfound(res);
+        }
+
+        responseHandler.ok(res);
+    } catch {
+        responseHandler.error(res);
+    }
+};
