@@ -32,10 +32,30 @@ router.post(
 );
 
 router.post(
+    "/signin",
     body("username").isLength({ min: 8 }).withMessage("Username must have minimum 8 characters"),
     body("password").isLength({ min: 8 }).withMessage("Password must have minimum 8 characters"),
     requestHandler.validate,
     userController.signin
+);
+
+router.put(
+    "/update-password",
+    tokenMiddleware.auth,
+    body("password")
+        .isLength({ min: 8 }).withMessage("Password must have minimum 8 characters"),
+    body("newPassword")
+        .isLength({ min: 8 }).withMessage("New Password must have minimum 8 characters"),
+    body("confirmPassword")
+        .isLength({ min: 8 }).withMessage("Confirm Password must have minimum 8 characters")
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) {
+                throw new Error("Confirm Password not match");
+            }
+            return true;
+        }),
+    requestHandler.validate,
+    userController.updatePassword
 );
 
 export default router;
