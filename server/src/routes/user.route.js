@@ -73,4 +73,10 @@ router.put(
     userController.updatePassword
 );
 
+router.get(
+    "/info",
+    tokenMiddleware.auth,
+    userController.getInfo
+);
+
 export default router;
