@@ -100,7 +100,7 @@ router.post(
         .exists().withMessage("Media Poster is required"),
     body("mediaRate")
         .exists().withMessage("Media Rate is required"),
-
+    requestHandler.validate,
     favoriteController.addFavorite
 );
 
