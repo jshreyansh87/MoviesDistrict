@@ -31,4 +31,11 @@ router.post(
     userController.signup
 );
 
+router.post(
+    body("username").isLength({ min: 8 }).withMessage("Username must have minimum 8 characters"),
+    body("password").isLength({ min: 8 }).withMessage("Password must have minimum 8 characters"),
+    requestHandler.validate,
+    userController.signin
+);
+
 export default router;
