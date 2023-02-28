@@ -32,4 +32,10 @@ router.post(
     reviewController.create
 );
 
+router.delete(
+    "/:reviewId",
+    tokenMiddleware.auth,
+    reviewController.remove
+);
+
 export default router;
