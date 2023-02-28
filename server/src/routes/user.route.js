@@ -79,4 +79,10 @@ router.get(
     userController.getInfo
 );
 
+router.get(
+    "/favorites",
+    tokenMiddleware.auth,
+    favoriteController.getFavorite
+);
+
 export default router;
