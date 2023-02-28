@@ -104,4 +104,10 @@ router.post(
     favoriteController.addFavorite
 );
 
+router.delete(
+    "/favorites/:favoriteId",
+    tokenMiddleware.auth,
+    favoriteController.removeFavorite
+);
+
 export default router;
