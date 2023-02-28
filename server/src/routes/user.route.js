@@ -85,4 +85,23 @@ router.get(
     favoriteController.getFavorite
 );
 
+router.post(
+    "/favorites",
+    tokenMiddleware.auth,
+    body("mediaType")
+        .exists().withMessage("Media Type is required")
+        .custom(type => ["movie", "tv"].includes(type)).withMessage("Media Type is invalid"),
+    body("mediaId")
+        .exists().withMessage("Media Id is required")
+        .isLength({ min: 1 }).withMessage("Media Id cannot be empty"),
+    body("mediaTitle")
+        .exists().withMessage("Media Title is required"),
+    body("mediaPoster")
+        .exists().withMessage("Media Poster is required"),
+    body("mediaRate")
+        .exists().withMessage("Media Rate is required"),
+
+    favoriteController.addFavorite
+);
+
 export default router;
